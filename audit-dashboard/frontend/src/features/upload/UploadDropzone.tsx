@@ -51,7 +51,7 @@ export function UploadDropzone() {
         onDrop={handleDrop}
         onClick={() => inputRef.current?.click()}
         className={cn(
-          'glass-panel flex cursor-pointer flex-col items-center justify-center gap-3 border-2 border-dashed py-16 text-center transition-colors',
+          'glass-panel flex cursor-pointer flex-col items-center justify-center gap-3 border-2 border-dashed px-4 py-10 text-center transition-colors sm:py-16',
           isDragging ? 'border-signal bg-signal/5' : 'border-border hover:border-border-strong'
         )}
       >
@@ -77,7 +77,7 @@ export function UploadDropzone() {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-panel flex items-center justify-between p-4"
+          className="glass-panel flex flex-wrap items-center justify-between gap-3 p-4"
         >
           <div className="flex items-center gap-3 min-w-0">
             <FileSpreadsheet size={20} className="text-signal shrink-0" />

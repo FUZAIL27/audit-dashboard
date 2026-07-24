@@ -6,7 +6,6 @@ import { LoginPage } from '@/pages/LoginPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { LogsPage } from '@/pages/LogsPage';
 import { UploadPage } from '@/pages/UploadPage';
-
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ShieldCheck } from 'lucide-react';
 

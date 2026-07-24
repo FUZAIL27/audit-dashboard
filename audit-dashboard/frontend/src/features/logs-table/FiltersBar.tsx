@@ -59,9 +59,9 @@ export function FiltersBar() {
   const hasActiveFilters = severity.length > 0 || status.length > 0 || search.length > 0;
 
   return (
-    <div className="glass-panel p-4 space-y-3">
-      <div className="flex items-center gap-3">
-        <div className="relative flex-1">
+    <div className="glass-panel p-3 space-y-3 sm:p-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative flex-1 min-w-0">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
           <Input
             placeholder="Search actor, action, IP, resource, region…"
@@ -70,20 +70,22 @@ export function FiltersBar() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <Button
-          variant={expanded ? 'primary' : 'secondary'}
-          size="md"
-          onClick={() => setExpanded((e) => !e)}
-        >
-          <SlidersHorizontal size={14} />
-          Filters
-        </Button>
-        {hasActiveFilters && (
-          <Button variant="ghost" size="md" onClick={resetFilters}>
-            <X size={14} />
-            Clear
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            variant={expanded ? 'primary' : 'secondary'}
+            size="md"
+            onClick={() => setExpanded((e) => !e)}
+          >
+            <SlidersHorizontal size={14} />
+            Filters
           </Button>
-        )}
+          {hasActiveFilters && (
+            <Button variant="ghost" size="md" onClick={resetFilters}>
+              <X size={14} />
+              Clear
+            </Button>
+          )}
+        </div>
       </div>
 
       {expanded && (
