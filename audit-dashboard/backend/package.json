@@ -2,6 +2,7 @@
   "name": "audit-dashboard-backend",
   "version": "1.0.0",
   "description": "Enterprise Security Audit Dashboard - API",
+  "private": true,
   "main": "dist/server.js",
   "type": "commonjs",
   "scripts": {
@@ -14,7 +15,7 @@
     "seed": "ts-node src/utils/seed.ts"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": "20.x"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
