@@ -56,7 +56,7 @@ function CopyableCell({ value }: { value: string }) {
 
 export function LogsTable() {
   const { data, isLoading, isFetching } = useAuditLogs();
-  const { sortBy, sortOrder, setSort, page, limit, setPage, setLimit } = useFiltersStore();
+  const { sortBy, sortOrder, setSort, limit, setPage, setLimit } = useFiltersStore();
   const openDrawer = useUIStore((s) => s.openDrawer);
   const [columnMenuOpen, setColumnMenuOpen] = useState(false);
   const [hiddenColumns, setHiddenColumns] = useState<Set<string>>(new Set());
