@@ -10,18 +10,20 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "typeRoots": [
-      "./src/types",
-      "./node_modules/@types"
-    ]
+    "types": [
+      "node",
+      "express"
+    ],
+    "forceConsistentCasingInFileNames": true,
+    "noEmitOnError": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "src/tests/**/*",
+    "src/tests",
     "**/*.test.ts",
     "**/*.spec.ts"
   ]
