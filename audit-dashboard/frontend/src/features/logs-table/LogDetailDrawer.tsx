@@ -16,9 +16,9 @@ import { useToast } from '@/providers/ToastProvider';
 
 function DetailRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="flex items-start justify-between gap-3 py-2 border-b border-border/60 sm:gap-4">
-      <span className="text-xs text-text-muted shrink-0 w-24 sm:w-32">{label}</span>
-      <span className={mono ? 'font-mono text-xs text-text-secondary text-right break-all min-w-0' : 'text-sm text-text-secondary text-right min-w-0'}>
+    <div className="flex items-start justify-between gap-4 py-2 border-b border-border/60">
+      <span className="text-xs text-text-muted shrink-0 w-32">{label}</span>
+      <span className={mono ? 'font-mono text-xs text-text-secondary text-right break-all' : 'text-sm text-text-secondary text-right'}>
         {value}
       </span>
     </div>
@@ -84,14 +84,14 @@ export function LogDetailDrawer() {
             transition={{ type: 'spring', damping: 32, stiffness: 300 }}
             className="fixed right-0 top-0 z-50 h-screen w-full max-w-xl overflow-y-auto border-l border-border bg-base-900 shadow-2xl"
           >
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-base-900/95 backdrop-blur px-4 py-4 sm:px-6">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-base-900/95 backdrop-blur px-6 py-4">
               <h2 className="font-display text-lg text-text-primary">Log Detail</h2>
               <button onClick={closeDrawer} className="text-text-muted hover:text-text-primary">
                 <X size={20} />
               </button>
             </div>
 
-            <div className="p-4 space-y-6 sm:p-6">
+            <div className="p-6 space-y-6">
               {isLoading || !log ? (
                 <div className="space-y-3">
                   {Array.from({ length: 6 }).map((_, i) => (

@@ -74,9 +74,9 @@ export function LoginPage() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="relative z-10 w-full max-w-md px-4 sm:px-6"
+        className="relative z-10 w-full max-w-md px-6"
       >
-        <div className="glass-panel p-6 sm:p-8">
+        <div className="glass-panel p-8">
           <div className="mb-8 flex flex-col items-center text-center">
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-signal/10 border border-signal/25">
               <ShieldCheck size={24} className="text-signal" />

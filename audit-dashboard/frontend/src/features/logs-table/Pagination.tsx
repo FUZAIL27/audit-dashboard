@@ -12,8 +12,8 @@ interface PaginationProps {
 
 export function Pagination({ meta, limit, onPageChange, onLimitChange }: PaginationProps) {
   return (
-    <div className="flex flex-col items-center justify-between gap-3 border-t border-border px-3 py-3 sm:flex-row sm:gap-0 sm:px-4">
-      <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-text-muted sm:justify-start">
+    <div className="flex items-center justify-between border-t border-border px-4 py-3">
+      <div className="flex items-center gap-2 text-xs text-text-muted">
         <span>
           Showing{' '}
           <span className="text-text-secondary font-medium">
@@ -24,7 +24,7 @@ export function Pagination({ meta, limit, onPageChange, onLimitChange }: Paginat
         <select
           value={limit}
           onChange={(e) => onLimitChange(Number(e.target.value))}
-          className="ml-0 rounded-md border border-border bg-base-800 px-2 py-1 text-xs text-text-secondary focus:outline-none sm:ml-2"
+          className="ml-2 rounded-md border border-border bg-base-800 px-2 py-1 text-xs text-text-secondary focus:outline-none"
         >
           {PAGE_SIZE_OPTIONS.map((size) => (
             <option key={size} value={size}>

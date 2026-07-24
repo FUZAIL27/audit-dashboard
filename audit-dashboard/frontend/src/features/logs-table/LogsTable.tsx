@@ -56,7 +56,7 @@ function CopyableCell({ value }: { value: string }) {
 
 export function LogsTable() {
   const { data, isLoading, isFetching } = useAuditLogs();
-  const { sortBy, sortOrder, setSort, page, limit, setPage, setLimit } = useFiltersStore();
+  const { sortBy, sortOrder, setSort, limit, setPage, setLimit } = useFiltersStore();
   const openDrawer = useUIStore((s) => s.openDrawer);
   const [columnMenuOpen, setColumnMenuOpen] = useState(false);
   const [hiddenColumns, setHiddenColumns] = useState<Set<string>>(new Set());
@@ -83,7 +83,7 @@ export function LogsTable() {
 
   return (
     <div className="glass-panel flex flex-col overflow-hidden">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-3 py-2.5 sm:px-4">
+      <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
         <p className="text-xs text-text-muted">
           {isFetching ? 'Refreshing…' : `${data?.meta.totalCount.toLocaleString() ?? 0} results`}
         </p>
@@ -121,101 +121,94 @@ export function LogsTable() {
         </div>
       </div>
 
-      {/* Horizontally scrollable region — keeps header and body columns in sync
-          on narrow viewports instead of letting fixed column widths clip or
-          force the whole page to scroll sideways. */}
-      <div className="overflow-x-auto">
-        <div className="min-w-[860px]">
-          {/* Sticky header */}
-          <div className="flex border-b border-border bg-base-800/80 px-3 sticky top-0 z-[1] sm:px-4">
-            {visibleColumns.map((col) => (
-              <button
-                key={col.key}
-                onClick={() => col.sortable && handleSort(col.key)}
-                className={cn(
-                  'flex items-center gap-1 py-2.5 pr-4 text-left text-xs font-medium uppercase tracking-wide text-text-muted shrink-0',
-                  col.width,
-                  col.sortable && 'hover:text-text-primary cursor-pointer'
-                )}
-              >
-                {col.label}
-                {col.sortable &&
-                  (sortBy === col.key ? (
-                    sortOrder === 'asc' ? (
-                      <ArrowUp size={12} />
-                    ) : (
-                      <ArrowDown size={12} />
-                    )
-                  ) : (
-                    <ArrowUpDown size={12} className="opacity-30" />
-                  ))}
-              </button>
+      {/* Sticky header */}
+      <div className="flex border-b border-border bg-base-800/80 px-4 sticky top-0 z-[1]">
+        {visibleColumns.map((col) => (
+          <button
+            key={col.key}
+            onClick={() => col.sortable && handleSort(col.key)}
+            className={cn(
+              'flex items-center gap-1 py-2.5 pr-4 text-left text-xs font-medium uppercase tracking-wide text-text-muted shrink-0',
+              col.width,
+              col.sortable && 'hover:text-text-primary cursor-pointer'
+            )}
+          >
+            {col.label}
+            {col.sortable &&
+              (sortBy === col.key ? (
+                sortOrder === 'asc' ? (
+                  <ArrowUp size={12} />
+                ) : (
+                  <ArrowDown size={12} />
+                )
+              ) : (
+                <ArrowUpDown size={12} className="opacity-30" />
+              ))}
+          </button>
+        ))}
+      </div>
+
+      {/* Body */}
+      <div ref={parentRef} className="h-[calc(100vh-380px)] min-h-[320px] overflow-y-auto">
+        {isLoading ? (
+          <div className="space-y-2 p-4">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <Skeleton key={i} className="h-10 w-full" />
             ))}
           </div>
-
-          {/* Body */}
-          <div ref={parentRef} className="h-[calc(100vh-380px)] min-h-[320px] overflow-y-auto">
-            {isLoading ? (
-              <div className="space-y-2 p-4">
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <Skeleton key={i} className="h-10 w-full" />
-                ))}
-              </div>
-            ) : rows.length === 0 ? (
-              <div className="flex h-full items-center justify-center text-sm text-text-muted">
-                No audit logs match the current filters.
-              </div>
-            ) : (
-              <div style={{ height: rowVirtualizer.getTotalSize(), position: 'relative' }}>
-                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                  const log = rows[virtualRow.index];
-                  return (
-                    <div
-                      key={log._id}
-                      onClick={() => openDrawer(log._id)}
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: virtualRow.size,
-                        transform: `translateY(${virtualRow.start}px)`,
-                      }}
-                      className="flex items-center border-b border-border/60 px-3 cursor-pointer hover:bg-base-800/50 transition-colors sm:px-4"
-                    >
-                      {visibleColumns.map((col) => (
-                        <div key={col.key} className={cn('pr-4 shrink-0 overflow-hidden', col.width)}>
-                          {col.key === 'timestamp' && (
-                            <span className="text-xs text-text-secondary font-mono">
-                              {formatDateTime(log.timestamp)}
-                            </span>
-                          )}
-                          {col.key === 'severity' && <SeverityBadge severity={log.severity} />}
-                          {col.key === 'status' && <StatusBadge status={log.status} />}
-                          {col.key === 'actor' && (
-                            <span className="text-sm text-text-primary truncate block">{log.actor}</span>
-                          )}
-                          {col.key === 'action' && (
-                            <span className="text-sm text-text-secondary truncate block">{log.action}</span>
-                          )}
-                          {col.key === 'resource' && (
-                            <span className="text-xs text-text-secondary font-mono truncate block">
-                              {log.resource}
-                            </span>
-                          )}
-                          {col.key === 'ipAddress' && <CopyableCell value={log.ipAddress} />}
-                          {col.key === 'region' && (
-                            <span className="text-xs text-text-secondary">{log.region}</span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+        ) : rows.length === 0 ? (
+          <div className="flex h-full items-center justify-center text-sm text-text-muted">
+            No audit logs match the current filters.
           </div>
-        </div>
+        ) : (
+          <div style={{ height: rowVirtualizer.getTotalSize(), position: 'relative' }}>
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const log = rows[virtualRow.index];
+              return (
+                <div
+                  key={log._id}
+                  onClick={() => openDrawer(log._id)}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: virtualRow.size,
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
+                  className="flex items-center border-b border-border/60 px-4 cursor-pointer hover:bg-base-800/50 transition-colors"
+                >
+                  {visibleColumns.map((col) => (
+                    <div key={col.key} className={cn('pr-4 shrink-0 overflow-hidden', col.width)}>
+                      {col.key === 'timestamp' && (
+                        <span className="text-xs text-text-secondary font-mono">
+                          {formatDateTime(log.timestamp)}
+                        </span>
+                      )}
+                      {col.key === 'severity' && <SeverityBadge severity={log.severity} />}
+                      {col.key === 'status' && <StatusBadge status={log.status} />}
+                      {col.key === 'actor' && (
+                        <span className="text-sm text-text-primary truncate block">{log.actor}</span>
+                      )}
+                      {col.key === 'action' && (
+                        <span className="text-sm text-text-secondary truncate block">{log.action}</span>
+                      )}
+                      {col.key === 'resource' && (
+                        <span className="text-xs text-text-secondary font-mono truncate block">
+                          {log.resource}
+                        </span>
+                      )}
+                      {col.key === 'ipAddress' && <CopyableCell value={log.ipAddress} />}
+                      {col.key === 'region' && (
+                        <span className="text-xs text-text-secondary">{log.region}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {data?.meta && (
