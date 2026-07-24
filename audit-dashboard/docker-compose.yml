@@ -1,0 +1,55 @@
+version: '3.9'
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: audit-dashboard-mongo
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: audit_dashboard
+
+  backend:
+    build:
+      context: ./backend
+    container_name: audit-dashboard-backend
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - '5000:5000'
+    environment:
+      # NODE_ENV is intentionally "development" here, not "production" —
+      # this compose file serves everything over plain HTTP on localhost.
+      # The cookie logic in auth.controller.ts sets `secure: true` +
+      # `sameSite: 'none'` only when NODE_ENV=production, which browsers
+      # require HTTPS for; forcing "production" here would silently break
+      # login (the browser drops the cookie) even though the container
+      # itself is otherwise running production-built code. Use a real
+      # platform (Render, etc.) with HTTPS for an actual production run.
+      NODE_ENV: development
+      PORT: 5000
+      MONGODB_URI: mongodb://mongo:27017/audit_dashboard
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev_access_secret_change_me_min_32_chars}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev_refresh_secret_change_me_min_32_chars}
+      CLIENT_ORIGIN: http://localhost:5173
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin@123}
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:5000/api
+    container_name: audit-dashboard-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - '5173:80'
+
+volumes:
+  mongo_data:
